@@ -105,21 +105,13 @@ const willBeAlive = (cell, state) => {
 };
 
 const calculateNext = (state) => {
-    result = [];
-    let { topRight, bottomLeft } = corners(state);
-    // console.log(topRight, bottomLeft);
-    topRight = [topRight[0] + 1, topRight[1] + 1];
-    bottomLeft = [bottomLeft[0] - 1, bottomLeft[1] - 1];
-    // console.log(topRight, bottomLeft);
-    for (let coluna = bottomLeft[1]; coluna <= topRight[1]; coluna++) {
-        for (let linha = bottomLeft[0]; linha <= topRight[0]; linha++) {
-            // console.log('Entrou');
-            // console.log([linha, coluna]);
-            if (willBeAlive([linha, coluna], state)) {
-                // console.log('Saida');
-                // console.log([linha, coluna]);
-                result.push([linha, coluna]);
-            }
+    const { bottomLeft, topRight } = corners(state);
+    let result = [];
+    for (let y = topRight[1] + 1; y >= bottomLeft[1] - 1; y--) {
+        for (let x = bottomLeft[0] - 1; x <= topRight[0] + 1; x++) {
+            result = result.concat(willBeAlive([x, y], state) ? [
+                [x, y]
+            ] : []);
         }
     }
     return result;
@@ -133,20 +125,16 @@ const calculateNext = (state) => {
 //     [4, 4]
 // ]);
 const iterate = (state, iterations) => {
-    result = [];
-    for (let index = 0; index < iterations; index++) {
-        result.push(calculateNext(state));
+    const states = [state];
+    for (let i = 0; i < iterations; i++) {
+        states.push(calculateNext(states[states.length - 1]));
     }
-    return result;
+    return states;
 };
 
 const main = (pattern, iterations) => {
-    state = startPatterns[pattern];
-    printCells(state);
-    for (let index = 0; index < iterate(state, iterations); index++) {
-        const element = iterate(state, iterations)[index];
-        printCells(element);
-    }
+    const results = iterate(startPatterns[pattern], iterations);
+    results.forEach(response => console.log(printCells(response)));
 };
 
 const startPatterns = {
