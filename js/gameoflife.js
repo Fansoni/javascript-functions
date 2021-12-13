@@ -124,15 +124,6 @@ const calculateNext = (state) => {
     }
     return result;
 };
-/*
-  [3, 5],
-  [2, 4],
-  [3, 4],
-  [1, 3],
-  [4, 3],
-  [2, 2],
-  [3, 2]
-*/
 // calculateNext([
 //     [2, 2],
 //     [3, 2],
